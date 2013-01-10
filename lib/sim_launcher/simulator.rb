@@ -27,7 +27,8 @@ class Simulator
   end
 
   def quit_simulator
-    `echo 'application "iPhone Simulator" quit' | osascript`
+    `killall -9 "iPhone Simulator"`
+    #`echo 'application "iPhone Simulator" quit' | osascript`
   end
 
   def run_synchronous_command( *args )
@@ -40,13 +41,13 @@ class Simulator
     cmd_sections = [@iphonesim_path] + args.map{ |x| "\"#{x.to_s}\"" } << '2>&1'
     cmd_sections.join(' ')
   end
-  
+
   def xcode_version
     version = `xcodebuild -version`
     raise "xcodebuild not found" unless $? == 0
     version[/([0-9]\.[0-9])/, 1].to_f
   end
-  
+
   def iphonesim_path(version)
     installed = `which ios-sim`
     if installed =~ /(.*ios-sim)/
